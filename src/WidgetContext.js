@@ -1,32 +1,33 @@
 import React, { useReducer } from 'react'
+import widgetDefinitions from './widgetDefinitions'
 
 const tempWidgets = [
-  {
-    key: 'random-key',
-    type: 'demo',
-    settings: {
-      title: 'Foo'
-    },
-    defaultAppearance: {
-      x: 0,
-      y: 0,
-      w: 3,
-      h: 2
-    }
-  },
-  {
-    key: 'random-key2',
-    type: 'demo',
-    settings: {
-      title: 'Foo2'
-    },
-    defaultAppearance: {
-      x: 3,
-      y: 0,
-      w: 2,
-      h: 2
-    }
-  }
+  // {
+  //   key: 'random-key',
+  //   type: 'demo',
+  //   settings: {
+  //     title: 'Foo'
+  //   },
+  //   appearance: {
+  //     x: 0,
+  //     y: 0,
+  //     w: 3,
+  //     h: 2
+  //   }
+  // },
+  // {
+  //   key: 'random-key2',
+  //   type: 'demo',
+  //   settings: {
+  //     title: 'Foo2'
+  //   },
+  //   appearance: {
+  //     x: 3,
+  //     y: 0,
+  //     w: 2,
+  //     h: 2
+  //   }
+  // }
 ]
 
 const initialWidgets = getFromLS('widgets') || tempWidgets
@@ -34,7 +35,9 @@ const initialLayouts = getFromLS('layouts') || tempGetLayouts(initialWidgets)
 
 const initialState = {
   widgets: initialWidgets,
-  layouts: initialLayouts
+  layouts: initialLayouts,
+  showWidgetSettingsModal: false,
+  widgetSettingsModalState: {}
 }
 
 function reducer(state, { type, payload }) {
@@ -49,6 +52,35 @@ function reducer(state, { type, payload }) {
       return {
         ...state,
         layouts: payload
+      }
+    case 'add_widget':
+      return {
+        ...state,
+        showWidgetSettingsModal: true,
+        widgetSettingsModalState: widgetDefinitions.find(
+          x => x.type === payload
+        )
+      }
+    case 'cancel_add_widget':
+      return {
+        ...state,
+        showWidgetSettingsModal: false,
+        widgetSettingsModalState: {}
+      }
+    case 'save_widget':
+      const widget = {
+        key: payload.type + Math.random(), // todo guid
+        type: payload.type,
+        settings: payload.settings,
+        appearance: widgetDefinitions.find(x => x.type === payload.type)
+      }
+      const updatedWidgets = [...state.widgets, widget]
+      saveToLS('widgets', updatedWidgets)
+      return {
+        ...state,
+        showWidgetSettingsModal: false,
+        widgetSettingsModalState: {},
+        widgets: updatedWidgets
       }
     default:
       throw new Error(`Invalid type: ` + type)
@@ -69,15 +101,13 @@ function WidgetProvider(props) {
 export { WidgetContext, WidgetProvider }
 
 function getFromLS(key) {
-  let ls = {}
   if (global.localStorage) {
     try {
-      ls = JSON.parse(global.localStorage.getItem(key))
+      return JSON.parse(global.localStorage.getItem(key))
     } catch (e) {
       /*Ignore*/
     }
   }
-  return ls
 }
 
 function saveToLS(key, value) {
@@ -86,9 +116,9 @@ function saveToLS(key, value) {
   }
 }
 
-const tempGetLayouts = widgets => {
+function tempGetLayouts(widgets) {
   const test = widgets.map(x => ({
-    ...x.defaultAppearance,
+    ...x.appearance,
     i: x.key
   }))
   return {

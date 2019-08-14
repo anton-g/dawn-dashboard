@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { WidthProvider, Responsive } from 'react-grid-layout'
 import Demo from './Demo'
 import { WidgetContext } from './WidgetContext'
+import WidgetSettingsModal from './WidgetSettingsModal'
 const ResponsiveGridLayout = WidthProvider(Responsive)
 
 const ComponentFactory = widget => {
@@ -21,12 +22,6 @@ export default function Layout(props) {
     return <div key={widget.key}>{ComponentFactory(widget)}</div>
   }
 
-  // const onRemoveWidget = key => {
-  //   const updatedWidgets = widgets.filter(x => x.key !== key)
-  //   setWidgets(updatedWidgets)
-  //   saveToLS('widgets', updatedWidgets)
-  // }
-
   const onBreakpointChange = (breakpoint, cols) => {
     // setBreakpoint(breakpoint)
     console.log(breakpoint)
@@ -39,7 +34,9 @@ export default function Layout(props) {
 
   return (
     <div>
-      <button>foo</button>
+      <button onClick={() => dispatch({ type: 'add_widget', payload: 'demo' })}>
+        Add
+      </button>
       <ResponsiveGridLayout
         onLayoutChange={onLayoutChange}
         onBreakpointChange={onBreakpointChange}
@@ -50,6 +47,7 @@ export default function Layout(props) {
       >
         {state.widgets.map(el => createElement(el))}
       </ResponsiveGridLayout>
+      <WidgetSettingsModal />
     </div>
   )
 }
