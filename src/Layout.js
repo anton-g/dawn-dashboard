@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import styled from 'styled-components'
+import React, { useState, useEffect, useContext } from 'react'
 import { WidthProvider, Responsive } from 'react-grid-layout'
 import Demo from './Demo'
+import { WidgetContext } from './WidgetContext'
 const ResponsiveGridLayout = WidthProvider(Responsive)
 
 const ComponentFactory = widget => {
@@ -13,86 +13,19 @@ const ComponentFactory = widget => {
   }
 }
 
-const tempwidgets = [
-  {
-    key: 'random-key',
-    type: 'demo',
-    settings: {
-      title: 'Foo'
-    },
-    defaultAppearance: {
-      x: 0,
-      y: 0,
-      w: 3,
-      h: 2
-    }
-  },
-  {
-    key: 'random-key2',
-    type: 'demo',
-    settings: {
-      title: 'Foo2'
-    },
-    defaultAppearance: {
-      x: 3,
-      y: 0,
-      w: 2,
-      h: 2
-    }
-  }
-]
-
-const StyledRemove = styled.span`
-  position: absolute;
-  right: 2px;
-  top: 0;
-  cursor: 'pointer';
-`
-
-const getLayouts = widgets => {
-  const test = widgets.map(x => ({
-    ...x.defaultAppearance,
-    i: x.key
-  }))
-  return {
-    lg: test,
-    md: test,
-    sm: test,
-    xs: test,
-    xxs: test
-  }
-}
-
 export default function Layout(props) {
-  const [newCounter, setNewCounter] = useState(0)
+  const { state, dispatch } = useContext(WidgetContext)
   const [cols, setCols] = useState()
-  const [widgets, setWidgets] = useState([])
-  const [layouts, setLayouts] = useState({})
-
-  useEffect(() => {
-    // load from ls
-    const w = getFromLS('widgets') || tempwidgets
-    setWidgets(w)
-    const l = getFromLS('layouts') || getLayouts(w)
-    setLayouts(l)
-  }, [])
 
   const createElement = widget => {
-    return (
-      <div key={widget.key}>
-        <StyledRemove onClick={() => onRemoveWidget(widget.key)}>
-          x
-        </StyledRemove>
-        {ComponentFactory(widget)}
-      </div>
-    )
+    return <div key={widget.key}>{ComponentFactory(widget)}</div>
   }
 
-  const onRemoveWidget = key => {
-    const updatedWidgets = widgets.filter(x => x.key !== key)
-    setWidgets(updatedWidgets)
-    saveToLS('widgets', updatedWidgets)
-  }
+  // const onRemoveWidget = key => {
+  //   const updatedWidgets = widgets.filter(x => x.key !== key)
+  //   setWidgets(updatedWidgets)
+  //   saveToLS('widgets', updatedWidgets)
+  // }
 
   const onBreakpointChange = (breakpoint, cols) => {
     // setBreakpoint(breakpoint)
@@ -101,8 +34,7 @@ export default function Layout(props) {
   }
 
   const onLayoutChange = (layout, layouts) => {
-    setLayouts(layouts)
-    saveToLS('layouts', layouts)
+    dispatch({ type: 'set_layouts', payload: layouts })
   }
 
   return (
@@ -114,9 +46,9 @@ export default function Layout(props) {
         className="layout"
         cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
         rowHeight={100}
-        layouts={layouts}
+        layouts={state.layouts}
       >
-        {widgets.map(el => createElement(el))}
+        {state.widgets.map(el => createElement(el))}
       </ResponsiveGridLayout>
     </div>
   )

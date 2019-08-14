@@ -17,7 +17,7 @@ const StyledDemo = styled.div`
 export default function Demo({ title }) {
   return (
     <StyledDemo>
-      <h1>Title</h1>
+      <h1>{title}</h1>
     </StyledDemo>
   )
 }
