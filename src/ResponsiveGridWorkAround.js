@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useRef, useCallback } from 'react'
 import { Responsive } from 'react-grid-layout'
-import { WidgetContext } from './WidgetContext'
+import { WidgetContext } from './store/WidgetContext'
 
 export default function ResponsiveGridWorkAround(props) {
   const gridRef = useRef(React.createRef())

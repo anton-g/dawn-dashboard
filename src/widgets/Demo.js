@@ -14,10 +14,11 @@ const StyledDemo = styled.div`
   }
 `
 
-export default function Demo({ title }) {
+export default function Demo({ title, onEditClick }) {
   return (
     <StyledDemo>
       <h1>{title}</h1>
+      <button onClick={onEditClick} />
     </StyledDemo>
   )
 }

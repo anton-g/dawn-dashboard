@@ -1,12 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react'
 import Modal from 'react-modal'
-import { WidgetContext } from './WidgetContext'
+import { WidgetContext } from './store/WidgetContext'
 
 Modal.setAppElement('#root')
 
-export default function WidgetSettingsModal() {
+export default function AddWidgetModal() {
   const { state, dispatch } = useContext(WidgetContext)
-  const widgetDefinition = state.widgetSettingsModalState
+  const widgetDefinition = state.modalState
   const [settings, setSettings] = useState({})
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function WidgetSettingsModal() {
 
   return (
     <Modal
-      isOpen={state.showWidgetSettingsModal}
+      isOpen={state.showAddWidgetModal}
       onRequestClose={cancel}
       contentLabel={`Add ${widgetDefinition.name} widget modal`}
     >

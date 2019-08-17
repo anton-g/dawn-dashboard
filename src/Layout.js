@@ -1,17 +1,25 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
 import { WidthProvider } from 'react-grid-layout'
 import Demo from './widgets/Demo'
-import { WidgetContext } from './WidgetContext'
-import WidgetSettingsModal from './WidgetSettingsModal'
+import { WidgetContext } from './store/WidgetContext'
+import AddWidgetModal from './AddWidgetModal'
 import widgetDefinitions from './widgets/widgetDefinitions'
 import RedditSubreddit from './widgets/RedditSubreddit'
 import ResponsiveGridWorkAround from './ResponsiveGridWorkAround'
+import EditWidgetModal from './EditWidgetModal'
 const ResponsiveGridLayout = WidthProvider(ResponsiveGridWorkAround)
 
-const ComponentFactory = widget => {
+const ComponentFactory = (widget, dispatch) => {
   switch (widget.type) {
     case 'demo':
-      return <Demo {...widget.settings} />
+      return (
+        <Demo
+          {...widget.settings}
+          onEditClick={() =>
+            dispatch({ type: 'edit_widget', payload: widget.key })
+          }
+        />
+      )
     case 'reddit-subreddit':
       return <RedditSubreddit {...widget.settings} />
     default:
@@ -26,7 +34,7 @@ export default function Layout(props) {
   const [cols, setCols] = useState()
 
   const createElement = widget => {
-    return <div key={widget.key}>{ComponentFactory(widget)}</div>
+    return <div key={widget.key}>{ComponentFactory(widget, dispatch)}</div>
   }
 
   const onBreakpointChange = (breakpoint, cols) => {
@@ -68,7 +76,8 @@ export default function Layout(props) {
       >
         {state.widgets.map(el => createElement(el))}
       </ResponsiveGridLayout>
-      <WidgetSettingsModal />
+      <AddWidgetModal />
+      <EditWidgetModal />
     </div>
   )
 }

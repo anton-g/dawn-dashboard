@@ -1,6 +1,6 @@
 import React from 'react'
 import Layout from './Layout'
-import { WidgetProvider } from './WidgetContext'
+import { WidgetProvider } from './store/WidgetContext'
 
 function App() {
   return (
