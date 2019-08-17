@@ -34,9 +34,18 @@ export default function Layout(props) {
 
   return (
     <div>
-      <button onClick={() => dispatch({ type: 'add_widget', payload: 'demo' })}>
-        Add
-      </button>
+      <select
+        value="disabled"
+        onChange={e => {
+          dispatch({ type: 'add_widget', payload: e.target.value })
+          e.target.value = 'disabled'
+        }}
+      >
+        <option disabled value="disabled">
+          Add new widget
+        </option>
+        <option value="demo">Demo</option>
+      </select>
       <ResponsiveGridLayout
         onLayoutChange={onLayoutChange}
         onBreakpointChange={onBreakpointChange}
