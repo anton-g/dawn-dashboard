@@ -1,30 +1,40 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { WidthProvider, Responsive } from 'react-grid-layout'
-import Demo from './Demo'
+import React, { useState, useEffect, useContext, useRef } from 'react'
+import { WidthProvider } from 'react-grid-layout'
+import Demo from './widgets/Demo'
 import { WidgetContext } from './WidgetContext'
 import WidgetSettingsModal from './WidgetSettingsModal'
-const ResponsiveGridLayout = WidthProvider(Responsive)
+import widgetDefinitions from './widgets/widgetDefinitions'
+import RedditSubreddit from './widgets/RedditSubreddit'
+import ResponsiveGridWorkAround from './ResponsiveGridWorkAround'
+const ResponsiveGridLayout = WidthProvider(ResponsiveGridWorkAround)
 
 const ComponentFactory = widget => {
   switch (widget.type) {
     case 'demo':
       return <Demo {...widget.settings} />
+    case 'reddit-subreddit':
+      return <RedditSubreddit {...widget.settings} />
     default:
       throw Error('Incorrect component type')
   }
 }
+
+const breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }
 
 export default function Layout(props) {
   const { state, dispatch } = useContext(WidgetContext)
   const [cols, setCols] = useState()
 
   const createElement = widget => {
-    return <div key={widget.key}>{ComponentFactory(widget)}</div>
+    return (
+      <div key={widget.key} data-grid-minh={5}>
+        {ComponentFactory(widget)}
+      </div>
+    )
   }
 
   const onBreakpointChange = (breakpoint, cols) => {
-    // setBreakpoint(breakpoint)
-    console.log(breakpoint)
+    dispatch({ type: 'set_breakpoint', payload: breakpoint })
     setCols(cols)
   }
 
@@ -44,12 +54,18 @@ export default function Layout(props) {
         <option disabled value="disabled">
           Add new widget
         </option>
-        <option value="demo">Demo</option>
+        {widgetDefinitions.map(w => (
+          <option key={w.type} value={w.type}>
+            {w.name}
+          </option>
+        ))}
       </select>
       <ResponsiveGridLayout
+        measureBeforeMount={true}
         onLayoutChange={onLayoutChange}
         onBreakpointChange={onBreakpointChange}
-        className="layout"
+        onWidthChange={e => console.log(e)}
+        breakpoints={breakpoints}
         cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
         rowHeight={100}
         layouts={state.layouts}
@@ -59,22 +75,4 @@ export default function Layout(props) {
       <WidgetSettingsModal />
     </div>
   )
-}
-
-function getFromLS(key) {
-  let ls = {}
-  if (global.localStorage) {
-    try {
-      ls = JSON.parse(global.localStorage.getItem(key))
-    } catch (e) {
-      /*Ignore*/
-    }
-  }
-  return ls
-}
-
-function saveToLS(key, value) {
-  if (global.localStorage) {
-    global.localStorage.setItem(key, JSON.stringify(value))
-  }
 }

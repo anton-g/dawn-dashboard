@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react'
-import widgetDefinitions from './widgetDefinitions'
+import widgetDefinitions from './widgets/widgetDefinitions'
 
 const tempWidgets = [
   // {
@@ -37,7 +37,8 @@ const initialState = {
   widgets: initialWidgets,
   layouts: initialLayouts,
   showWidgetSettingsModal: false,
-  widgetSettingsModalState: {}
+  widgetSettingsModalState: {},
+  breakpoint: undefined
 }
 
 function reducer(state, { type, payload }) {
@@ -52,6 +53,11 @@ function reducer(state, { type, payload }) {
       return {
         ...state,
         layouts: payload
+      }
+    case 'set_breakpoint':
+      return {
+        ...state,
+        breakpoint: payload
       }
     case 'add_widget':
       return {
@@ -71,16 +77,29 @@ function reducer(state, { type, payload }) {
       const widget = {
         key: payload.type + Math.random(), // todo guid
         type: payload.type,
-        settings: payload.settings,
-        appearance: widgetDefinitions.find(x => x.type === payload.type)
+        settings: payload.settings
       }
       const updatedWidgets = [...state.widgets, widget]
       saveToLS('widgets', updatedWidgets)
+
+      const layout = {
+        ...widgetDefinitions.find(x => x.type === payload.type).defaultLayout,
+        i: widget.key
+      }
+
+      const updatedLayouts = { ...state.layouts }
+      updatedLayouts[state.breakpoint] = [
+        ...updatedLayouts[state.breakpoint],
+        layout
+      ]
+      saveToLS('layouts', updatedLayouts)
+
       return {
         ...state,
         showWidgetSettingsModal: false,
         widgetSettingsModalState: {},
-        widgets: updatedWidgets
+        widgets: updatedWidgets,
+        layouts: updatedLayouts
       }
     default:
       throw new Error(`Invalid type: ` + type)
