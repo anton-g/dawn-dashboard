@@ -26,6 +26,8 @@ export default function reducer(state, { type, payload }) {
   }
 
   function reset() {
+    saveToLS('widgets', [])
+    saveToLS('layouts', {})
     return {
       ...state,
       widgets: [],
@@ -118,6 +120,7 @@ export default function reducer(state, { type, payload }) {
     const idx = updatedWidgets.findIndex(x => x.key === widget.key)
     updatedWidgets[idx] = widget
 
+    saveToLS('widgets', updatedWidgets)
     return {
       ...state,
       widgets: updatedWidgets,

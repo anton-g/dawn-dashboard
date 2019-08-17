@@ -1,31 +1,12 @@
-import React, { useState, useEffect, useContext, useRef } from 'react'
+import React, { useState, useContext } from 'react'
 import { WidthProvider } from 'react-grid-layout'
-import Demo from './widgets/Demo'
 import { WidgetContext } from './store/WidgetContext'
 import AddWidgetModal from './AddWidgetModal'
-import widgetDefinitions from './widgets/widgetDefinitions'
-import RedditSubreddit from './widgets/RedditSubreddit'
 import ResponsiveGridWorkAround from './ResponsiveGridWorkAround'
 import EditWidgetModal from './EditWidgetModal'
+import { getWidgetComponent } from './componentFactory'
+import Toolbar from './Toolbar'
 const ResponsiveGridLayout = WidthProvider(ResponsiveGridWorkAround)
-
-const ComponentFactory = (widget, dispatch) => {
-  const edit = key => dispatch({ type: 'edit_widget', payload: key })
-
-  switch (widget.type) {
-    case 'demo':
-      return <Demo {...widget.settings} onEditClick={() => edit(widget.key)} />
-    case 'reddit-subreddit':
-      return (
-        <RedditSubreddit
-          {...widget.settings}
-          onEditClick={() => edit(widget.key)}
-        />
-      )
-    default:
-      throw Error('Incorrect component type')
-  }
-}
 
 const breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }
 
@@ -34,7 +15,7 @@ export default function Layout(props) {
   const [cols, setCols] = useState()
 
   const createElement = widget => {
-    return <div key={widget.key}>{ComponentFactory(widget, dispatch)}</div>
+    return <div key={widget.key}>{getWidgetComponent(widget, dispatch)}</div>
   }
 
   const onBreakpointChange = (breakpoint, cols) => {
@@ -48,23 +29,10 @@ export default function Layout(props) {
 
   return (
     <div>
-      <select
-        value="disabled"
-        onChange={e => {
-          dispatch({ type: 'add_widget', payload: e.target.value })
-          e.target.value = 'disabled'
-        }}
-      >
-        <option disabled value="disabled">
-          Add new widget
-        </option>
-        {widgetDefinitions.map(w => (
-          <option key={w.type} value={w.type}>
-            {w.name}
-          </option>
-        ))}
-      </select>
-      <button onClick={() => dispatch({ type: 'reset' })}>reset</button>
+      <Toolbar
+        onAddWidget={type => dispatch({ type: 'add_widget', payload: type })}
+        onReset={() => dispatch({ type: 'reset' })}
+      />
       <ResponsiveGridLayout
         measureBeforeMount={true}
         onLayoutChange={onLayoutChange}

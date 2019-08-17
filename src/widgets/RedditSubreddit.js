@@ -9,13 +9,14 @@ const StyledContainer = styled.div`
   height: 100%;
   border: 1px solid lightgrey;
   border-radius: 5px;
+  background-color: white;
 `
 
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 8px;
+  padding-left: 8px;
 `
 
 const Title = styled.h1`
