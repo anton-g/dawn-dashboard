@@ -45,11 +45,16 @@ const Post = styled.li`
   white-space: nowrap;
 `
 
-export default function RedditSubreddit({ subredditName, onEditClick }) {
+export default function RedditWidget({
+  subredditName,
+  sort,
+  time,
+  onEditClick
+}) {
   const [posts, setPosts] = useState([])
 
   useEffect(() => {
-    fetch(`https://www.reddit.com/r/${subredditName}/new.json?sort=new`)
+    fetch(`https://www.reddit.com/r/${subredditName}/${sort}.json?t=${time}`)
       .then(response => response.json())
       .then(({ data }) => {
         const ps = data.children.map(({ data }) => ({

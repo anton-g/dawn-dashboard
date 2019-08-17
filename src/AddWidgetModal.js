@@ -1,23 +1,19 @@
 import React, { useContext, useState, useEffect } from 'react'
 import Modal from 'react-modal'
 import { WidgetContext } from './store/WidgetContext'
+import WidgetSettingsForm from './components/WidgetSettingsForm'
 
 Modal.setAppElement('#root')
 
 export default function AddWidgetModal() {
   const { state, dispatch } = useContext(WidgetContext)
   const widgetDefinition = state.modalState
-  const [settings, setSettings] = useState({})
-
-  useEffect(() => {
-    setSettings({})
-  }, [widgetDefinition, setSettings])
 
   const cancel = () => {
     dispatch({ type: 'cancel_add_widget' })
   }
 
-  const save = () => {
+  const save = settings => {
     // todo validation
     dispatch({
       type: 'save_widget',
@@ -35,33 +31,11 @@ export default function AddWidgetModal() {
       contentLabel={`Add ${widgetDefinition.name} widget modal`}
     >
       <h2>Add widget: {widgetDefinition.name}</h2>
-      {widgetDefinition.settings && (
-        <form>
-          {Object.entries(widgetDefinition.settings).map(([key, s]) =>
-            getSettingInput(key, s, v => {
-              settings[key] = v
-              setSettings(settings)
-            })
-          )}
-        </form>
-      )}
-      <button onClick={cancel}>Cancel</button>
-      <button onClick={save}>Save</button>
+      <WidgetSettingsForm
+        widgetDefinition={widgetDefinition}
+        onSave={save}
+        onCancel={cancel}
+      />
     </Modal>
   )
-}
-
-const getSettingInput = (key, setting, cb) => {
-  switch (setting.type) {
-    case 'text':
-      return (
-        <label key={key}>
-          {setting.name}: <input onChange={e => cb(e.target.value)} />
-        </label>
-      )
-    default:
-      throw Error(
-        `Incorrect setting type specified in widget definition: ${setting.type}`
-      )
-  }
 }

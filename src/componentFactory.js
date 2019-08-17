@@ -1,5 +1,5 @@
 import React from 'react'
-import RedditSubreddit from './widgets/RedditSubreddit'
+import RedditWidget from './widgets/RedditWidget'
 import Demo from './widgets/Demo'
 
 export const getWidgetComponent = (widget, dispatch) => {
@@ -8,9 +8,9 @@ export const getWidgetComponent = (widget, dispatch) => {
   switch (widget.type) {
     case 'demo':
       return <Demo {...widget.settings} onEditClick={() => edit(widget.key)} />
-    case 'reddit-subreddit':
+    case 'reddit':
       return (
-        <RedditSubreddit
+        <RedditWidget
           {...widget.settings}
           onEditClick={() => edit(widget.key)}
         />

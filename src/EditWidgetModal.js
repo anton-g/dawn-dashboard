@@ -1,22 +1,19 @@
 import React, { useContext, useState, useEffect } from 'react'
 import Modal from 'react-modal'
 import { WidgetContext } from './store/WidgetContext'
+import WidgetSettingsForm from './components/WidgetSettingsForm'
 
 Modal.setAppElement('#root')
 
 export default function EditWidgetModal() {
   const { state, dispatch } = useContext(WidgetContext)
   const { widget, widgetDefinition } = state.modalState
-  const [settings, setSettings] = useState({})
-  useEffect(() => {
-    setSettings({})
-  }, [widgetDefinition, setSettings])
 
   const cancel = () => {
     dispatch({ type: 'cancel_add_widget' })
   }
 
-  const save = () => {
+  const save = settings => {
     // todo validation
     dispatch({
       type: 'save_edit_widget',
@@ -36,7 +33,13 @@ export default function EditWidgetModal() {
       contentLabel={`Edit ${widgetDefinition.name} widget modal`}
     >
       <h2>Edit "{widgetDefinition.name}" widget</h2>
-      {widgetDefinition.settings && (
+      <WidgetSettingsForm
+        widgetDefinition={widgetDefinition}
+        widget={widget}
+        onSave={save}
+        onCancel={cancel}
+      />
+      {/* {widgetDefinition.settings && (
         <form>
           {Object.entries(widgetDefinition.settings).map(([key, s]) =>
             getSettingInput(key, s, widget.settings[key], v => {
@@ -47,7 +50,7 @@ export default function EditWidgetModal() {
         </form>
       )}
       <button onClick={cancel}>Cancel</button>
-      <button onClick={save}>Save</button>
+      <button onClick={save}>Save</button> */}
     </Modal>
   )
 }
