@@ -7,7 +7,6 @@ export default function ResponsiveGridWorkAround(props) {
   const { dispatch } = useContext(WidgetContext)
 
   const setInitialBreakpoint = () => {
-    console.log('setting initial breakpoint')
     // Since RGL doesn't provide the initial breakpoint we have to select it ourselves
     const breakpoint = getBreakpointFromWidth(props.breakpoints, props.width)
     dispatch({ type: 'set_breakpoint', payload: breakpoint })

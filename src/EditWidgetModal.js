@@ -8,7 +8,6 @@ export default function EditWidgetModal() {
   const { state, dispatch } = useContext(WidgetContext)
   const { widget, widgetDefinition } = state.modalState
   const [settings, setSettings] = useState({})
-  console.log(widget, widgetDefinition)
   useEffect(() => {
     setSettings({})
   }, [widgetDefinition, setSettings])

@@ -10,18 +10,18 @@ import EditWidgetModal from './EditWidgetModal'
 const ResponsiveGridLayout = WidthProvider(ResponsiveGridWorkAround)
 
 const ComponentFactory = (widget, dispatch) => {
+  const edit = key => dispatch({ type: 'edit_widget', payload: key })
+
   switch (widget.type) {
     case 'demo':
+      return <Demo {...widget.settings} onEditClick={() => edit(widget.key)} />
+    case 'reddit-subreddit':
       return (
-        <Demo
+        <RedditSubreddit
           {...widget.settings}
-          onEditClick={() =>
-            dispatch({ type: 'edit_widget', payload: widget.key })
-          }
+          onEditClick={() => edit(widget.key)}
         />
       )
-    case 'reddit-subreddit':
-      return <RedditSubreddit {...widget.settings} />
     default:
       throw Error('Incorrect component type')
   }
@@ -64,6 +64,7 @@ export default function Layout(props) {
           </option>
         ))}
       </select>
+      <button onClick={() => dispatch({ type: 'reset' })}>reset</button>
       <ResponsiveGridLayout
         measureBeforeMount={true}
         onLayoutChange={onLayoutChange}

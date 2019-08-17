@@ -11,9 +11,20 @@ const StyledContainer = styled.div`
   border-radius: 5px;
 `
 
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 8px;
+`
+
 const Title = styled.h1`
   font-size: 16px;
-  padding-left: 8px;
+  display: inline-block;
+`
+
+const EditButton = styled.button`
+  border: none;
 `
 
 const PostList = styled.ul`
@@ -33,7 +44,7 @@ const Post = styled.li`
   white-space: nowrap;
 `
 
-export default function RedditSubreddit({ subredditName }) {
+export default function RedditSubreddit({ subredditName, onEditClick }) {
   const [posts, setPosts] = useState([])
 
   useEffect(() => {
@@ -53,7 +64,10 @@ export default function RedditSubreddit({ subredditName }) {
 
   return (
     <StyledContainer>
-      <Title>/r/{subredditName}</Title>
+      <Header>
+        <Title>/r/{subredditName}</Title>
+        <EditButton onClick={onEditClick}>⚙︎</EditButton>
+      </Header>
       <PostList>
         {posts.map(p => (
           <Post key={p.id}>

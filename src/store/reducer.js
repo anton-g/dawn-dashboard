@@ -19,8 +19,18 @@ export default function reducer(state, { type, payload }) {
       return editWidget(payload)
     case 'save_edit_widget':
       return saveEditWidget(payload)
+    case 'reset':
+      return reset()
     default:
       throw new Error(`Invalid type: ` + type)
+  }
+
+  function reset() {
+    return {
+      ...state,
+      widgets: [],
+      layouts: {}
+    }
   }
 
   function removeWidget(widgetkey) {
