@@ -26,11 +26,7 @@ export default function Layout(props) {
   const [cols, setCols] = useState()
 
   const createElement = widget => {
-    return (
-      <div key={widget.key} data-grid-minh={5}>
-        {ComponentFactory(widget)}
-      </div>
-    )
+    return <div key={widget.key}>{ComponentFactory(widget)}</div>
   }
 
   const onBreakpointChange = (breakpoint, cols) => {

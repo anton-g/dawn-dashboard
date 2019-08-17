@@ -7,7 +7,8 @@ const StyledContainer = styled.div`
   overflow-y: scroll;
   overflow-x: hidden;
   height: 100%;
-  border: 1px dashed palevioletred;
+  border: 1px solid lightgrey;
+  border-radius: 5px;
 `
 
 const Title = styled.h1`
