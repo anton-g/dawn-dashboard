@@ -13,6 +13,10 @@ export default function EditWidgetModal() {
     dispatch({ type: 'cancel_add_widget' })
   }
 
+  const remove = () => {
+    dispatch({ type: 'remove_widget', payload: widget.key })
+  }
+
   const save = settings => {
     // todo validation
     dispatch({
@@ -38,6 +42,7 @@ export default function EditWidgetModal() {
         widget={widget}
         onSave={save}
         onCancel={cancel}
+        onRemove={remove}
       />
     </Modal>
   )

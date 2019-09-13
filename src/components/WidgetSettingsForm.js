@@ -10,7 +10,8 @@ export default function WidgetSettingsForm({
   widget,
   widgetDefinition,
   onSave,
-  onCancel
+  onCancel,
+  onRemove
 }) {
   const [settings, setSettings] = useState({})
 
@@ -42,6 +43,7 @@ export default function WidgetSettingsForm({
         )}
       <button onClick={onCancel}>Cancel</button>
       <button onClick={() => onSave(settings)}>Save</button>
+      {onRemove && <button onClick={onRemove}>Remove widget</button>}
     </SettingsForm>
   )
 }

@@ -11,6 +11,8 @@ export default function reducer(state, { type, payload }) {
       return setBreakpoint(payload)
     case 'add_widget':
       return addWidget(payload)
+    case 'remove_widget':
+      return removeWidget(payload)
     case 'cancel_add_widget':
       return cancelAddWidget()
     case 'save_widget':
@@ -35,13 +37,6 @@ export default function reducer(state, { type, payload }) {
     }
   }
 
-  function removeWidget(widgetkey) {
-    return {
-      ...state,
-      widgets: state.widgets.filter(x => x.key !== widgetkey)
-    }
-  }
-
   function setLayouts(layouts) {
     saveToLS('layouts', layouts)
     return {
@@ -62,6 +57,16 @@ export default function reducer(state, { type, payload }) {
       ...state,
       showAddWidgetModal: true,
       modalState: widgetDefinitions.find(x => x.type === widgetType)
+    }
+  }
+
+  function removeWidget(widgetKey) {
+    const updatedWidgets = state.widgets.filter(x => x.key !== widgetKey)
+    saveToLS('widgets', updatedWidgets)
+
+    return {
+      ...state,
+      widgets: updatedWidgets
     }
   }
 
