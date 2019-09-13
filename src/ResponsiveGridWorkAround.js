@@ -6,15 +6,11 @@ export default function ResponsiveGridWorkAround(props) {
   const gridRef = useRef(React.createRef())
   const { dispatch } = useContext(WidgetContext)
 
-  const setInitialBreakpoint = () => {
+  const memoizedCallback = useCallback(() => {
     // Since RGL doesn't provide the initial breakpoint we have to select it ourselves
     const breakpoint = getBreakpointFromWidth(props.breakpoints, props.width)
     dispatch({ type: 'set_breakpoint', payload: breakpoint })
-  }
-
-  const memoizedCallback = useCallback(() => {
-    setInitialBreakpoint()
-  }, [])
+  }, [dispatch, props.breakpoints, props.width])
 
   useEffect(() => {
     memoizedCallback()

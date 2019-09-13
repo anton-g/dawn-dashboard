@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext } from 'react'
 import Modal from 'react-modal'
 import { WidgetContext } from './store/WidgetContext'
 import WidgetSettingsForm from './components/WidgetSettingsForm'

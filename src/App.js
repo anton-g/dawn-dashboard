@@ -1,6 +1,6 @@
 import React from 'react'
 import { createGlobalStyle } from 'styled-components'
-import Layout from './Layout'
+import Main from './Main'
 import { WidgetProvider } from './store/WidgetContext'
 
 const GlobalStyle = createGlobalStyle`  
@@ -15,7 +15,7 @@ function App() {
     <>
       <GlobalStyle />
       <WidgetProvider>
-        <Layout />
+        <Main />
       </WidgetProvider>
     </>
   )

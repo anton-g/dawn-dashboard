@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext } from 'react'
 import Modal from 'react-modal'
 import { WidgetContext } from './store/WidgetContext'
 import WidgetSettingsForm from './components/WidgetSettingsForm'
@@ -39,34 +39,6 @@ export default function EditWidgetModal() {
         onSave={save}
         onCancel={cancel}
       />
-      {/* {widgetDefinition.settings && (
-        <form>
-          {Object.entries(widgetDefinition.settings).map(([key, s]) =>
-            getSettingInput(key, s, widget.settings[key], v => {
-              settings[key] = v
-              setSettings(settings)
-            })
-          )}
-        </form>
-      )}
-      <button onClick={cancel}>Cancel</button>
-      <button onClick={save}>Save</button> */}
     </Modal>
   )
-}
-
-const getSettingInput = (key, setting, value, cb) => {
-  switch (setting.type) {
-    case 'text':
-      return (
-        <label key={key}>
-          {setting.name}:{' '}
-          <input defaultValue={value} onChange={e => cb(e.target.value)} />
-        </label>
-      )
-    default:
-      throw Error(
-        `Incorrect setting type specified in widget definition: ${setting.type}`
-      )
-  }
 }

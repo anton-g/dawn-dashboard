@@ -1,6 +1,45 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
+export default function RedditWidget({
+  subredditName,
+  sort,
+  time,
+  onEditClick
+}) {
+  const [posts, setPosts] = useState([])
+
+  useEffect(() => {
+    fetch(`https://www.reddit.com/r/${subredditName}/${sort}.json?t=${time}`)
+      .then(response => response.json())
+      .then(({ data }) => {
+        const ps = data.children.map(({ data }) => ({
+          id: data.id,
+          title: data.title,
+          author: data.author,
+          href: `https://reddit.com${data.permalink}`
+        }))
+        setPosts(ps)
+      })
+  }, [subredditName, sort, time])
+
+  return (
+    <StyledContainer>
+      <Header>
+        <Title>/r/{subredditName}</Title>
+        <EditButton onClick={onEditClick}>⚙︎</EditButton>
+      </Header>
+      <PostList>
+        {posts.map(p => (
+          <Post key={p.id}>
+            <a href={p.href}>{p.title}</a>
+          </Post>
+        ))}
+      </PostList>
+    </StyledContainer>
+  )
+}
+
 const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -44,43 +83,3 @@ const Post = styled.li`
   text-overflow: ellipsis;
   white-space: nowrap;
 `
-
-export default function RedditWidget({
-  subredditName,
-  sort,
-  time,
-  onEditClick
-}) {
-  const [posts, setPosts] = useState([])
-
-  useEffect(() => {
-    fetch(`https://www.reddit.com/r/${subredditName}/${sort}.json?t=${time}`)
-      .then(response => response.json())
-      .then(({ data }) => {
-        const ps = data.children.map(({ data }) => ({
-          id: data.id,
-          title: data.title,
-          author: data.author,
-          href: `https://reddit.com${data.permalink}`
-        }))
-        console.log(data.children)
-        setPosts(ps)
-      })
-  }, [subredditName])
-
-  return (
-    <StyledContainer>
-      <Header>
-        <Title>/r/{subredditName}</Title>
-        <EditButton onClick={onEditClick}>⚙︎</EditButton>
-      </Header>
-      <PostList>
-        {posts.map(p => (
-          <Post key={p.id}>
-            <a href={p.href}>{p.title}</a>
-          </Post>
-        ))}
-      </PostList>
-    </StyledContainer>
-  )
-}
