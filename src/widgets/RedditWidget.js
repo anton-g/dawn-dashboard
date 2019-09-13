@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { StyledContainer, Header, Title, EditButton } from '../styles'
 
 export default function RedditWidget({
   subredditName,
@@ -48,33 +49,6 @@ export default function RedditWidget({
     </StyledContainer>
   )
 }
-
-const StyledContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  height: 100%;
-  border: 1px solid lightgrey;
-  border-radius: 5px;
-  background-color: white;
-`
-
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-left: 8px;
-`
-
-const Title = styled.h1`
-  font-size: 16px;
-  display: inline-block;
-`
-
-const EditButton = styled.button`
-  border: none;
-`
 
 const PostList = styled.ul`
   list-style: none;

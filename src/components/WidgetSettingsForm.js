@@ -49,7 +49,6 @@ export default function WidgetSettingsForm({
 }
 
 const getSettingInput = (key, setting, value, cb) => {
-  console.log(setting)
   switch (setting.type) {
     case 'text':
       return (

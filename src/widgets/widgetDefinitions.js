@@ -76,5 +76,25 @@ export default [
       minH: 2,
       minW: 3
     }
+  },
+  {
+    type: 'rss',
+    name: 'RSS',
+    description: 'RSS desc',
+    settings: {
+      url: {
+        name: 'RSS URL',
+        type: 'text',
+        required: true
+      }
+    },
+    defaultLayout: {
+      x: 0,
+      y: 0,
+      w: 3,
+      h: 2,
+      minH: 2,
+      minW: 3
+    }
   }
 ]
