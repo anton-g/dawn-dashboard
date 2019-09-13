@@ -22,6 +22,7 @@ export default function RssWidget({ url, onEditClick }) {
       })
       .catch(() => {
         setError(true)
+        setItems([])
       })
   }, [url])
 
