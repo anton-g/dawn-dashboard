@@ -8,6 +8,7 @@ export default function RedditWidget({
   onEditClick
 }) {
   const [posts, setPosts] = useState([])
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     fetch(`https://www.reddit.com/r/${subredditName}/${sort}.json?t=${time}`)
@@ -20,15 +21,23 @@ export default function RedditWidget({
           href: `https://reddit.com${data.permalink}`
         }))
         setPosts(ps)
+        setError(false)
+      })
+      .catch(() => {
+        setError(true)
+        setPosts([])
       })
   }, [subredditName, sort, time])
 
   return (
     <StyledContainer>
       <Header>
-        <Title>/r/{subredditName}</Title>
+        <Title>
+          /r/{subredditName} - {sort} - {time}
+        </Title>
         <EditButton onClick={onEditClick}>⚙︎</EditButton>
       </Header>
+      {error && <Error>Invalid configuration</Error>}
       <PostList>
         {posts.map(p => (
           <Post key={p.id}>
@@ -82,4 +91,13 @@ const Post = styled.li`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+`
+
+const Error = styled.p`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 24px;
+  color: red;
 `
