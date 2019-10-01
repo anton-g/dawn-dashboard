@@ -1,14 +1,11 @@
 import React from 'react'
 import RedditWidget from './widgets/RedditWidget'
-import Demo from './widgets/Demo'
 import RssWidget from './widgets/RssWidget'
 
 export const getWidgetComponent = (widget, dispatch) => {
   const edit = key => dispatch({ type: 'edit_widget', payload: key })
 
   switch (widget.type) {
-    case 'demo':
-      return <Demo {...widget.settings} onEditClick={() => edit(widget.key)} />
     case 'reddit':
       return (
         <RedditWidget

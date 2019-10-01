@@ -18,7 +18,6 @@ export default function RssWidget({ url, onEditClick }) {
         setTitle(feed.title)
         setItems(feed.items)
         setError(false)
-        console.log(feed.items)
       })
       .catch(() => {
         setError(true)
